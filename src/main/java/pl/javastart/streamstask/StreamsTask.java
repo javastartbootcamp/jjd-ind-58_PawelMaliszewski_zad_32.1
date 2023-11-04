@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 public class StreamsTask {
 
     public static void main(String[] args) {

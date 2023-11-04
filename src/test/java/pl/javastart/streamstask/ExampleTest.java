@@ -1,6 +1,5 @@
 package pl.javastart.streamstask;
 
-
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
 
 public class ExampleTest {
 
