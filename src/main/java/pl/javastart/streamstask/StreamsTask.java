@@ -1,7 +1,7 @@
 package pl.javastart.streamstask;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,14 +42,12 @@ public class StreamsTask {
 
     // metoda powinna zwracać średni wiek mężczyzn (sprawdzając, czy imię nie kończy się na "a")
     Double averageMenAge(Collection<User> users) {
-        BigDecimal maleUsersNumber = new BigDecimal(users.stream().filter(user -> !user.getName().endsWith("a")).count());
-        return users.stream()
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(2);
+        return Double.parseDouble(nf.format(users.stream()
                 .filter(user -> !user.getName().endsWith("a"))
-                .mapToInt(User::getAge)
-                .mapToObj(BigDecimal::new)
-                .reduce(BigDecimal::add)
-                .map(bd -> bd.divide(maleUsersNumber, 2, RoundingMode.HALF_UP))
-                .map(bigDecimal -> Double.parseDouble(bigDecimal.toString())).get();
+                .mapToDouble(User::getAge)
+                .average().orElse(0.0)));
     }
 
     // metoda powinna zwracać wydatki zgrupowane po ID użytkownika
@@ -61,11 +59,10 @@ public class StreamsTask {
     // metoda powinna zwracać wydatki zgrupowane po użytkowniku
     // podobne do poprzedniego, ale trochę trudniejsze
     Map<User, List<Expense>> groupExpensesByUser(Collection<User> users, List<Expense> expenses) {
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getId, user -> user));
         return expenses.stream()
                 .collect(Collectors.groupingBy(
-                        expense -> users.stream()
-                                .filter(user -> user.getId().equals(expense.getUserId()))
-                                .findFirst().get()
+                        expense -> userMap.get(expense.getUserId())
                 ));
     }
 }
